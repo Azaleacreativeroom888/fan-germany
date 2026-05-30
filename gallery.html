@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Galerie – Waldmärchen Manga</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=IM+Fell+English:ital@0;1&family=Nunito:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --forest-deep: #1a2e1a;
+      --forest-mid: #2d5a27;
+      --forest-light: #4a8c3f;
+      --forest-pale: #7ab648;
+      --moss: #5c7a3e;
+      --fern: #3d6b35;
+      --bark: #5c3d1e;
+      --bark-light: #8b6340;
+      --gold: #c9a84c;
+      --gold-light: #e8c96e;
+      --cream: #f5edd6;
+      --cream-dark: #e8d5b0;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background-color: var(--forest-deep);
+      color: var(--cream);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background:
+        radial-gradient(ellipse at 10% 80%, rgba(45,90,39,0.12) 0%, transparent 50%),
+        radial-gradient(ellipse at 90% 20%, rgba(74,140,63,0.08) 0%, transparent 50%);
+      pointer-events: none; z-index: 0;
+    }
+
+    
+
+    /* ── PAGE HEADER ── */
+    .page-header {
+      position: relative; z-index: 10;
+      padding: 100px 32px 60px; text-align: center;
+    }
+    .page-header::after {
+      content: '';
+      position: absolute; bottom: 0; left: 10%; width: 80%; height: 1px;
+      background: linear-gradient(to right, transparent, var(--moss), var(--gold), var(--moss), transparent);
+    }
+    .page-eyebrow { font-family: 'IM Fell English', serif; font-style: italic; color: var(--forest-pale); font-size: 0.95rem; letter-spacing: 4px; margin-bottom: 12px; }
+    .page-title { font-family: 'Cinzel Decorative', serif; font-size: clamp(2rem, 5vw, 3.5rem); color: var(--gold); text-shadow: 0 4px 20px rgba(201,168,76,0.25); margin-bottom: 16px; }
+    .page-desc { font-family: 'IM Fell English', serif; color: var(--cream-dark); font-size: 1.05rem; max-width: 600px; margin: 0 auto; line-height: 1.8; opacity: 0.85; }
+
+    /* ── FILTER BAR ── */
+    .filter-bar {
+      position: relative; z-index: 10;
+      max-width: 960px; margin: 40px auto 0;
+      padding: 0 40px;
+      display: flex; gap: 10px; flex-wrap: wrap; align-items: center;
+    }
+    .filter-label {
+      font-family: 'IM Fell English', serif;
+      font-style: italic; font-size: 0.85rem;
+      color: var(--moss); letter-spacing: 2px;
+    }
+    .filter-btn {
+      padding: 7px 18px;
+      background: transparent;
+      border: 1px solid rgba(74,140,63,0.4);
+      border-radius: 2px;
+      font-family: 'IM Fell English', serif;
+      font-size: 0.85rem;
+      color: var(--cream-dark);
+      cursor: pointer;
+      letter-spacing: 1px;
+      transition: all 0.25s;
+    }
+    .filter-btn:hover {
+      background: rgba(45,90,39,0.4);
+      border-color: var(--moss);
+      color: var(--forest-pale);
+    }
+    .filter-btn.active {
+      background: rgba(45,90,39,0.6);
+      border-color: var(--gold);
+      color: var(--gold-light);
+    }
+
+    /* ── GALLERY SECTION ── */
+    .gallery-section {
+      position: relative; z-index: 10;
+      max-width: 960px; margin: 28px auto 80px;
+      padding: 0 40px;
+    }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 24px;
+    }
+
+    /* ── GALLERY CARD ── */
+    .gallery-card {
+      background: linear-gradient(145deg, rgba(30,55,25,0.9), rgba(20,40,18,0.95));
+      border: 1px solid rgba(74,140,63,0.25);
+      border-radius: 4px;
+      overflow: hidden;
+      display: flex; flex-direction: column;
+      transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
+      animation: fadeIn 0.4s ease both;
+    }
+    .gallery-card:hover {
+      transform: translateY(-5px);
+      border-color: rgba(201,168,76,0.4);
+      box-shadow: 0 14px 36px rgba(0,0,0,0.45);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Art area */
+    .gallery-art {
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      position: relative;
+      overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
+      border-bottom: 1px solid rgba(74,140,63,0.2);
+    }
+    .gallery-art svg {
+      width: 100%; height: 100%;
+      display: block;
+    }
+
+    /* Manga image link (for real manga pages) */
+    .gallery-art a.manga-link {
+      display: block; width: 100%; height: 100%;
+    }
+    .gallery-art a.manga-link img {
+      width: 100%; height: 100%;
+      object-fit: contain; object-position: center;
+      display: block;
+    }
+
+    /* Read badge overlay */
+    .read-badge {
+      position: absolute; bottom: 10px; right: 10px;
+      background: rgba(45,90,39,0.92);
+      color: var(--forest-pale);
+      font-family: 'IM Fell English', serif;
+      font-size: 0.7rem; letter-spacing: 2px;
+      padding: 4px 12px;
+      border: 1px solid rgba(74,140,63,0.5);
+      border-radius: 2px;
+      transition: background 0.25s, color 0.25s;
+      pointer-events: none;
+    }
+    .gallery-card:hover .read-badge {
+      background: rgba(201,168,76,0.85);
+      color: var(--forest-deep);
+      border-color: var(--gold);
+    }
+
+    /* Info */
+    .gallery-info {
+      padding: 16px 18px 20px;
+      flex: 1; display: flex; flex-direction: column;
+    }
+    .gallery-tag {
+      display: inline-block;
+      font-family: 'Nunito', sans-serif;
+      font-size: 0.65rem; font-weight: 800;
+      letter-spacing: 2px; text-transform: uppercase;
+      padding: 3px 10px; border-radius: 2px;
+      margin-bottom: 10px; align-self: flex-start;
+    }
+    .tag-comic   { background: rgba(45,90,39,0.5);   color: var(--forest-pale); border: 1px solid rgba(74,140,63,0.4); }
+    .tag-culture { background: rgba(201,168,76,0.15); color: var(--gold-light);  border: 1px solid rgba(201,168,76,0.3); }
+    .tag-idiom   { background: rgba(92,122,62,0.25);  color: var(--moss);        border: 1px solid rgba(92,122,62,0.4); }
+    .tag-holiday { background: rgba(92,61,30,0.35);   color: var(--bark-light);  border: 1px solid rgba(139,99,64,0.4); }
+
+    .gallery-info h3 {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: 0.95rem; color: var(--cream);
+      line-height: 1.35; margin-bottom: 8px;
+    }
+    .gallery-info p {
+      font-size: 0.82rem; line-height: 1.7;
+      color: var(--cream-dark); opacity: 0.75; flex: 1;
+    }
+
+    /* ── SUBMIT BANNER ── */
+    .submit-banner {
+      position: relative; z-index: 10;
+      max-width: 960px; margin: 0 auto 80px;
+      padding: 0 40px;
+    }
+    .submit-inner {
+      background: linear-gradient(135deg, rgba(45,90,39,0.5), rgba(30,60,25,0.6));
+      border: 1px solid rgba(74,140,63,0.3);
+      border-radius: 4px;
+      padding: 36px 32px;
+      text-align: center;
+    }
+    .submit-inner h3 {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: 1.3rem; color: var(--gold);
+      margin-bottom: 10px;
+    }
+    .submit-inner p {
+      font-family: 'IM Fell English', serif;
+      font-size: 0.95rem; color: var(--cream-dark);
+      opacity: 0.8; line-height: 1.7; max-width: 500px;
+      margin: 0 auto 20px;
+    }
+    .coming-badge {
+      display: inline-block;
+      background: rgba(201,168,76,0.15);
+      color: var(--gold-light);
+      font-family: 'IM Fell English', serif;
+      font-style: italic; font-size: 0.9rem;
+      padding: 8px 24px;
+      border: 1px solid rgba(201,168,76,0.35);
+      border-radius: 2px; letter-spacing: 2px;
+    }
+
+    /* ── FOOTER ── */
+    footer { position: relative; z-index: 10; text-align: center; padding: 36px 24px 28px; border-top: 1px solid rgba(74,140,63,0.15); }
+    .footer-links { display: flex; justify-content: center; gap: 28px; flex-wrap: wrap; margin-bottom: 16px; }
+    .footer-links a { color: var(--moss); text-decoration: none; font-family: 'IM Fell English', serif; font-size: 0.9rem; transition: color 0.3s; }
+    .footer-links a:hover { color: var(--gold-light); }
+    .footer-copy { color: rgba(92,122,62,0.5); font-size: 0.78rem; letter-spacing: 1px; }
+
+    @media (max-width: 600px) {
+      .gallery-grid { grid-template-columns: 1fr 1fr; gap: 14px; }
+      nav { padding: 16px 20px; }
+      .nav-links { gap: 16px; }
+      .filter-bar, .gallery-section, .submit-banner { padding: 0 20px; }
+    }
+  
+    /* ── HAMBURGER NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0;
+      width: 100%; z-index: 200;
+      padding: 0 28px;
+      height: 60px;
+      display: flex; align-items: center; justify-content: space-between;
+      background: rgba(13,24,13,0.97);
+      backdrop-filter: blur(6px);
+      border-bottom: 1px solid rgba(74,140,63,0.2);
+    }
+    .nav-logo {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: 1.1rem; color: var(--gold);
+      text-decoration: none; letter-spacing: 2px;
+      z-index: 201; flex-shrink: 0;
+    }
+    .nav-logo span { color: var(--forest-pale); }
+
+    /* Hamburger button */
+    .nav-toggle {
+      display: none;
+      flex-direction: column; justify-content: center; align-items: center;
+      gap: 5px;
+      width: 40px; height: 40px;
+      background: none; border: none; cursor: pointer;
+      z-index: 201; padding: 4px;
+    }
+    .nav-toggle span {
+      display: block;
+      width: 24px; height: 2px;
+      background: var(--cream);
+      border-radius: 2px;
+      transition: transform 0.35s, opacity 0.35s, width 0.35s;
+      transform-origin: center;
+    }
+    /* X animation */
+    .nav-toggle.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .nav-toggle.open span:nth-child(2) { opacity: 0; width: 0; }
+    .nav-toggle.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    /* Desktop links */
+    .nav-links {
+      display: flex; gap: 32px; list-style: none;
+      align-items: center;
+    }
+    .nav-links a {
+      color: var(--cream-dark); text-decoration: none;
+      font-family: 'IM Fell English', serif; font-size: 0.95rem;
+      letter-spacing: 1px; transition: color 0.3s;
+      position: relative;
+    }
+    .nav-links a::after {
+      content: '';
+      position: absolute; bottom: -3px; left: 0;
+      width: 0; height: 1px;
+      background: var(--gold); transition: width 0.3s;
+    }
+    .nav-links a:hover { color: var(--gold); }
+    .nav-links a:hover::after { width: 100%; }
+    .nav-links a.active { color: var(--gold); }
+    .nav-links a.active::after { width: 100%; }
+
+    /* ── MOBILE ── */
+    @media (max-width: 680px) {
+      .nav-toggle { display: flex; }
+
+      .nav-links {
+        position: fixed;
+        top: 0; right: 0;
+        width: min(280px, 80vw);
+        height: 100vh;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0;
+        background: rgba(13,24,13,0.98);
+        border-left: 1px solid rgba(74,140,63,0.25);
+        padding: 80px 0 40px;
+        transform: translateX(100%);
+        transition: transform 0.4s cubic-bezier(0.4,0,0.2,1);
+        backdrop-filter: blur(8px);
+      }
+      .nav-links.open { transform: translateX(0); }
+
+      .nav-links li { width: 100%; }
+      .nav-links a {
+        display: block;
+        padding: 16px 32px;
+        font-size: 1.1rem;
+        border-bottom: 1px solid rgba(74,140,63,0.1);
+        letter-spacing: 1.5px;
+      }
+      .nav-links a::after { display: none; }
+      .nav-links a:hover { background: rgba(45,90,39,0.2); }
+      .nav-links a.active { background: rgba(45,90,39,0.25); color: var(--gold); }
+
+      /* Overlay behind drawer */
+      .nav-overlay {
+        display: none;
+        position: fixed; inset: 0; z-index: 199;
+        background: rgba(0,0,0,0.5);
+      }
+      .nav-overlay.open { display: block; }
+    }
+
+    </style>
+</head>
+<body>
+
+    <nav>
+    <a href="index.html" class="nav-logo">Wald<span>märchen</span></a>
+    <button class="nav-toggle" id="navToggle" aria-label="Menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="index.html">Startseite</a></li>
+      <li><a href="translation.html">Translation</a></li>
+      <li><a href="blog.html">Blog</a></li>
+      <li><a href="gallery.html" class="active">Galerie</a></li>
+      <li><a href="contact.html">Kontakt</a></li>
+    </ul>
+  </nav>
+
+  <div class="page-header">
+    <p class="page-eyebrow">✦ Bilderwelt ✦</p>
+    <h1 class="page-title">Galerie</h1>
+    <p class="page-desc">English culture, illustrated. Comics, art & visual notes from the enchanted forest.</p>
+  </div>
+
+  <!-- FILTER BAR -->
+  <div class="filter-bar">
+    <span class="filter-label">Filter:</span>
+    <button class="filter-btn active" onclick="filterGallery('all', this)">All</button>
+    <button class="filter-btn" onclick="filterGallery('comic', this)">📖 Comic</button>
+    <button class="filter-btn" onclick="filterGallery('culture', this)">🌍 Culture</button>
+    <button class="filter-btn" onclick="filterGallery('idiom', this)">💬 Idioms</button>
+    <button class="filter-btn" onclick="filterGallery('holiday', this)">🎉 Holidays</button>
+  </div>
+
+  <!-- GALLERY GRID -->
+  <div class="gallery-section">
+    <div class="gallery-grid" id="galleryGrid">
+
+      <!-- Card 1: The Kappa (real manga page) -->
+      <div class="gallery-card" data-tag="comic">
+        <div class="gallery-art">
+          <a class="manga-link" href="manga11-1.html">
+            <img src="河童 英語_001.jpg" alt="The Kappa">
+          </a>
+          <span class="read-badge">▶ READ NOW</span>
+        </div>
+        <div class="gallery-info">
+          <span class="gallery-tag tag-comic">📖 Comic</span>
+          <h3>The "Kappa"</h3>
+          <p>A manga story featuring the legendary Japanese water creature — reimagined and translated into English.</p>
+        </div>
+      </div>
+
+      <!-- Card 2: The Last Idol (real manga page) -->
+      <div class="gallery-card" data-tag="comic">
+        <div class="gallery-art">
+          <a class="manga-link" href="manga4-1.html">
+            <img src="manga4-page1-en.jpg" alt="The Last Idol">
+          </a>
+          <span class="read-badge">▶ READ NOW</span>
+        </div>
+        <div class="gallery-info">
+          <span class="gallery-tag tag-comic">📖 Comic</span>
+          <h3>The Last Idol</h3>
+          <p>An English-translated manga about idols, dreams, and the pressure of the spotlight.</p>
+        </div>
+      </div>
+
+      <!-- Card 3: Halloween Night (SVG) -->
+      <div class="gallery-card" data-tag="holiday">
+        <div class="gallery-art">
+          <svg viewBox="0 0 320 240" xmlns="http://www.w3.org/2000/svg">
+            <rect width="320" height="240" fill="#1a0a2e"/>
+            <circle cx="260" cy="45" r="30" fill="#FFF3A3"/>
+            <circle cx="272" cy="35" r="24" fill="#1a0a2e"/>
+            <rect x="0" y="175" width="320" height="65" fill="#0d1f0d"/>
+            <ellipse cx="80" cy="178" rx="30" ry="26" fill="#D76B2B"/>
+            <ellipse cx="65" cy="178" rx="18" ry="22" fill="#c55a1e"/>
+            <ellipse cx="95" cy="178" rx="18" ry="22" fill="#c55a1e"/>
+            <rect x="77" y="152" width="6" height="16" rx="3" fill="#2C6B3A"/>
+            <polygon points="70,172 76,165 82,172" fill="#1a0a2e"/>
+            <polygon points="85,172 91,165 97,172" fill="#1a0a2e"/>
+            <path d="M68 184 Q80 196 92 184" stroke="#1a0a2e" stroke-width="3" fill="none"/>
+            <ellipse cx="80" cy="178" rx="30" ry="26" fill="#F5C518" opacity="0.12"/>
+            <ellipse cx="210" cy="120" rx="32" ry="36" fill="rgba(255,255,255,0.92)"/>
+            <rect x="178" y="120" width="64" height="32" fill="rgba(255,255,255,0.92)"/>
+            <circle cx="195" cy="146" r="8" fill="rgba(255,255,255,0.92)"/>
+            <circle cx="225" cy="148" r="8" fill="rgba(255,255,255,0.92)"/>
+            <circle cx="200" cy="118" r="5" fill="#1a0a2e"/>
+            <circle cx="220" cy="118" r="5" fill="#1a0a2e"/>
+            <path d="M204 132 Q210 140 216 132" stroke="#1a0a2e" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+            <text x="30" y="80" font-size="18">🦇</text>
+            <text x="140" y="60" font-size="14">🦇</text>
+            <text x="160" y="230" text-anchor="middle" font-family="sans-serif" font-weight="bold" font-size="13" fill="#F5C518">Halloween 🎃</text>
+          </svg>
+        </div>
+        <div class="gallery-info">
+          <span class="gallery-tag tag-holiday">🎉 Holiday</span>
+          <h3>Halloween Night</h3>
+          <p>Jack-o'-lanterns, ghosts, and "Trick or Treat" — Halloween is a staple of American fall culture that shows up constantly in English media.</p>
+        </div>
+      </div>
+
+      <!-- Card 4: The AHA Moment (SVG comic) -->
+      <div class="gallery-card" data-tag="comic">
+        <div class="gallery-art">
+          <svg viewBox="0 0 320 240" xmlns="http://www.w3.org/2000/svg">
+            <rect width="320" height="240" fill="#fff"/>
+            <rect x="8" y="8" width="144" height="108" fill="#FFF3A3" stroke="#3B1F0A" stroke-width="3"/>
+            <rect x="168" y="8" width="144" height="108" fill="#d4eaff" stroke="#3B1F0A" stroke-width="3"/>
+            <rect x="8" y="128" width="304" height="104" fill="#ffe0e0" stroke="#3B1F0A" stroke-width="3"/>
+            <circle cx="80" cy="55" r="22" fill="#F5C518" stroke="#3B1F0A" stroke-width="2.5"/>
+            <circle cx="72" cy="50" r="3.5" fill="#3B1F0A"/>
+            <circle cx="88" cy="50" r="3.5" fill="#3B1F0A"/>
+            <path d="M72 66 Q80 72 88 66" stroke="#3B1F0A" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+            <rect x="55" y="82" width="50" height="28" rx="3" fill="#fff" stroke="#3B1F0A" stroke-width="2"/>
+            <line x1="80" y1="82" x2="80" y2="110" stroke="#3B1F0A" stroke-width="1.5"/>
+            <line x1="62" y1="90" x2="77" y2="90" stroke="#3B1F0A" stroke-width="1"/>
+            <line x1="62" y1="96" x2="77" y2="96" stroke="#3B1F0A" stroke-width="1"/>
+            <line x1="83" y1="90" x2="98" y2="90" stroke="#3B1F0A" stroke-width="1"/>
+            <text x="80" y="30" text-anchor="middle" font-family="sans-serif" font-weight="bold" font-size="10" fill="#3B1F0A">STUDYING...</text>
+            <circle cx="240" cy="58" r="22" fill="#F5C518" stroke="#3B1F0A" stroke-width="2.5"/>
+            <circle cx="232" cy="53" r="3.5" fill="#3B1F0A"/>
+            <circle cx="248" cy="53" r="3.5" fill="#3B1F0A"/>
+            <path d="M232 68 Q240 76 248 68" stroke="#3B1F0A" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+            <circle cx="240" cy="22" r="10" fill="#F5C518" stroke="#3B1F0A" stroke-width="2"/>
+            <rect x="236" y="30" width="8" height="4" rx="1" fill="#3B1F0A"/>
+            <line x1="240" y1="10" x2="240" y2="6" stroke="#F5C518" stroke-width="2.5"/>
+            <line x1="252" y1="15" x2="256" y2="12" stroke="#F5C518" stroke-width="2.5"/>
+            <line x1="228" y1="15" x2="224" y2="12" stroke="#F5C518" stroke-width="2.5"/>
+            <text x="240" y="20" text-anchor="middle" font-family="sans-serif" font-size="9" fill="#3B1F0A" font-weight="bold">AHA!</text>
+            <text x="160" y="175" text-anchor="middle" font-family="sans-serif" font-weight="900" font-size="22" fill="#D72B2B">I GOT IT!!</text>
+            <text x="160" y="205" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#3B1F0A">"Break a leg" = Good luck!</text>
+            <text x="40" y="185" font-size="20">⭐</text>
+            <text x="260" y="185" font-size="20">⭐</text>
+            <text x="100" y="165" font-size="14">✦</text>
+            <text x="210" y="165" font-size="14">✦</text>
+          </svg>
+        </div>
+        <div class="gallery-info">
+          <span class="gallery-tag tag-comic">📖 Comic</span>
+          <h3>The AHA Moment</h3>
+          <p>A 3-panel comic about learning an English idiom — that moment when confusing words finally click into place.</p>
+        </div>
+      </div>
+
+      <!-- Card 5: American BBQ (SVG culture) -->
+      <div class="gallery-card" data-tag="culture">
+        <div class="gallery-art">
+          <svg viewBox="0 0 320 240" xmlns="http://www.w3.org/2000/svg">
+            <rect width="320" height="240" fill="#87CEEB"/>
+            <ellipse cx="80" cy="40" rx="45" ry="20" fill="white" opacity="0.9"/>
+            <ellipse cx="260" cy="55" rx="38" ry="16" fill="white" opacity="0.8"/>
+            <rect x="0" y="165" width="320" height="75" fill="#4a8c2a"/>
+            <rect x="90" y="130" width="140" height="40" rx="8" fill="#2a2a2a"/>
+            <rect x="100" y="120" width="120" height="15" rx="4" fill="#1a1a1a"/>
+            <rect x="110" y="170" width="10" height="35" fill="#2a2a2a" rx="2"/>
+            <rect x="200" y="170" width="10" height="35" fill="#2a2a2a" rx="2"/>
+            <ellipse cx="140" cy="128" rx="10" ry="14" fill="#D72B2B" opacity="0.8"/>
+            <ellipse cx="140" cy="128" rx="6" ry="10" fill="#F5C518"/>
+            <ellipse cx="165" cy="126" rx="9" ry="12" fill="#D72B2B" opacity="0.8"/>
+            <ellipse cx="165" cy="126" rx="5" ry="8" fill="#F5C518"/>
+            <ellipse cx="190" cy="128" rx="10" ry="13" fill="#D72B2B" opacity="0.8"/>
+            <ellipse cx="190" cy="128" rx="6" ry="9" fill="#F5C518"/>
+            <rect x="125" y="115" width="28" height="10" rx="5" fill="#8B4513"/>
+            <rect x="167" y="115" width="28" height="10" rx="5" fill="#8B4513"/>
+            <circle cx="140" cy="95" r="8" fill="rgba(200,200,200,0.5)"/>
+            <circle cx="148" cy="80" r="10" fill="rgba(200,200,200,0.4)"/>
+            <circle cx="165" cy="88" r="8" fill="rgba(200,200,200,0.5)"/>
+            <circle cx="48" cy="155" r="14" fill="#3B1F0A"/>
+            <rect x="38" y="169" width="20" height="30" rx="5" fill="#3B1F0A"/>
+            <circle cx="272" cy="152" r="14" fill="#5c3317"/>
+            <rect x="262" y="166" width="20" height="30" rx="5" fill="#5c3317"/>
+            <rect x="80" y="215" width="160" height="22" rx="4" fill="rgba(255,255,255,0.7)"/>
+            <text x="160" y="230" text-anchor="middle" font-family="sans-serif" font-weight="bold" font-size="12" fill="#3B1F0A">Summer BBQ 🍔</text>
+          </svg>
+        </div>
+        <div class="gallery-info">
+          <span class="gallery-tag tag-culture">🌍 Culture</span>
+          <h3>The American BBQ</h3>
+          <p>Backyard grilling is practically a religion in America. Burgers, hot dogs, and lawn chairs — a cultural staple you'll see in countless shows and movies.</p>
+        </div>
+      </div>
+
+      <!-- Card 6: Break a Leg (SVG idiom) -->
+      <div class="gallery-card" data-tag="idiom">
+        <div class="gallery-art">
+          <svg viewBox="0 0 320 240" xmlns="http://www.w3.org/2000/svg">
+            <rect width="320" height="240" fill="#2C6B3A"/>
+            <rect x="40" y="150" width="240" height="18" rx="4" fill="#5c3317"/>
+            <rect x="20" y="168" width="280" height="12" rx="3" fill="#3d2010"/>
+            <ellipse cx="100" cy="140" rx="55" ry="30" fill="rgba(245,197,24,0.15)"/>
+            <ellipse cx="220" cy="140" rx="55" ry="30" fill="rgba(245,197,24,0.15)"/>
+            <circle cx="160" cy="95" r="22" fill="#F5C518" stroke="#3B1F0A" stroke-width="2.5"/>
+            <circle cx="152" cy="90" r="4" fill="#3B1F0A"/>
+            <circle cx="168" cy="90" r="4" fill="#3B1F0A"/>
+            <path d="M152 106 Q160 115 168 106" stroke="#3B1F0A" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+            <ellipse cx="160" cy="73" rx="20" ry="6" fill="#1a1a1a"/>
+            <rect x="146" y="44" width="28" height="30" rx="2" fill="#1a1a1a"/>
+            <line x1="138" y1="120" x2="112" y2="100" stroke="#3B1F0A" stroke-width="5" stroke-linecap="round"/>
+            <line x1="182" y1="120" x2="208" y2="100" stroke="#3B1F0A" stroke-width="5" stroke-linecap="round"/>
+            <text x="55" y="75" font-size="18">⭐</text>
+            <text x="245" y="80" font-size="16">✨</text>
+            <text x="80" y="115" font-size="14">✦</text>
+            <text x="228" y="110" font-size="14">✦</text>
+            <rect x="30" y="195" width="260" height="36" rx="6" fill="rgba(0,0,0,0.4)"/>
+            <text x="160" y="212" text-anchor="middle" font-family="sans-serif" font-style="italic" font-size="12" fill="#F5C518">"Break a leg!"</text>
+            <text x="160" y="226" text-anchor="middle" font-family="sans-serif" font-size="10" fill="rgba(255,255,255,0.7)">= Good luck! (theatre idiom)</text>
+          </svg>
+        </div>
+        <div class="gallery-info">
+          <span class="gallery-tag tag-idiom">💬 Idiom</span>
+          <h3>"Break a Leg!"</h3>
+          <p>Actors say this before a performance as a way of wishing good luck — saying "good luck" directly is actually considered bad luck on stage.</p>
+        </div>
+      </div>
+
+    </div><!-- /.gallery-grid -->
+
+    <!-- Submit Banner -->
+    <div class="submit-banner" style="margin-top: 40px;">
+      <div class="submit-inner">
+        <h3>🎨 Got Art to Share?</h3>
+        <p>Future submissions will be open — illustrations, mini-comics, or any visual exploration of English culture. Stay tuned!</p>
+        <span class="coming-badge">✦ Submissions Coming Soon ✦</span>
+      </div>
+    </div>
+
+  </div><!-- /.gallery-section -->
+
+  <footer>
+    <div class="footer-links">
+      <a href="index.html">Startseite</a>
+      <a href="translation.html">Übersetzung</a>
+      <a href="blog.html">Blog</a>
+      <a href="gallery.html">Galerie</a>
+      <a href="contact.html">Kontakt</a>
+    </div>
+    <p class="footer-copy">© 2026 Waldmärchen · Mit ♥ und Magie gemacht</p>
+  </footer>
+
+  <script>
+    function filterGallery(tag, btn) {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const cards = document.querySelectorAll('.gallery-card');
+      cards.forEach(card => {
+        if (tag === 'all' || card.dataset.tag === tag) {
+          card.style.display = 'flex';
+          card.style.animation = 'none';
+          setTimeout(() => { card.style.animation = 'fadeIn 0.35s ease'; }, 10);
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+  </script>
+</body>
+</html>
