@@ -566,15 +566,17 @@
       .nav-links a:hover { background: rgba(45,90,39,0.2); }
       .nav-links a.active { background: rgba(45,90,39,0.25); color: var(--gold); }
 
-      /* Overlay behind drawer */
-      .nav-overlay {
-        display: none;
-        position: fixed; inset: 0; z-index: 199;
-        background: rgba(0,0,0,0.5);
-      }
-      .nav-overlay.open { display: block; }
+      
     }
 
+    
+    /* nav overlay – always in DOM, hidden by default */
+    .nav-overlay {
+      display: none;
+      position: fixed; inset: 0; z-index: 199;
+      background: rgba(0,0,0,0.5);
+    }
+    .nav-overlay.open { display: block; }
     </style>
 </head>
 <body>
@@ -792,5 +794,37 @@
     });
     fb.appendChild(svg);
   </script>
+
+  <div class="nav-overlay" id="navOverlay"></div>
+  <script>
+    (function() {
+      var toggle  = document.getElementById('navToggle');
+      var links   = document.getElementById('navLinks');
+      var overlay = document.getElementById('navOverlay');
+      if (!toggle || !links) return;
+      function closeNav() {
+        toggle.classList.remove('open');
+        links.classList.remove('open');
+        if (overlay) overlay.classList.remove('open');
+        document.body.style.overflow = '';
+      }
+      toggle.addEventListener('click', function() {
+        var isOpen = links.classList.contains('open');
+        if (isOpen) {
+          closeNav();
+        } else {
+          toggle.classList.add('open');
+          links.classList.add('open');
+          if (overlay) overlay.classList.add('open');
+          document.body.style.overflow = 'hidden';
+        }
+      });
+      if (overlay) overlay.addEventListener('click', closeNav);
+      links.querySelectorAll('a').forEach(function(a) {
+        a.addEventListener('click', closeNav);
+      });
+    })();
+  </script>
+
 </body>
 </html>
