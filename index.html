@@ -469,7 +469,113 @@
       0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.5; }
       50%       { transform: translate(-50%, -50%) scale(1.1); opacity: 1; }
     }
-  </style>
+  
+    /* ── HAMBURGER NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0;
+      width: 100%; z-index: 200;
+      padding: 0 28px;
+      height: 60px;
+      display: flex; align-items: center; justify-content: space-between;
+      background: rgba(13,24,13,0.97);
+      backdrop-filter: blur(6px);
+      border-bottom: 1px solid rgba(74,140,63,0.2);
+    }
+    .nav-logo {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: 1.1rem; color: var(--gold);
+      text-decoration: none; letter-spacing: 2px;
+      z-index: 201; flex-shrink: 0;
+    }
+    .nav-logo span { color: var(--forest-pale); }
+
+    /* Hamburger button */
+    .nav-toggle {
+      display: none;
+      flex-direction: column; justify-content: center; align-items: center;
+      gap: 5px;
+      width: 40px; height: 40px;
+      background: none; border: none; cursor: pointer;
+      z-index: 201; padding: 4px;
+    }
+    .nav-toggle span {
+      display: block;
+      width: 24px; height: 2px;
+      background: var(--cream);
+      border-radius: 2px;
+      transition: transform 0.35s, opacity 0.35s, width 0.35s;
+      transform-origin: center;
+    }
+    /* X animation */
+    .nav-toggle.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .nav-toggle.open span:nth-child(2) { opacity: 0; width: 0; }
+    .nav-toggle.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    /* Desktop links */
+    .nav-links {
+      display: flex; gap: 32px; list-style: none;
+      align-items: center;
+    }
+    .nav-links a {
+      color: var(--cream-dark); text-decoration: none;
+      font-family: 'IM Fell English', serif; font-size: 0.95rem;
+      letter-spacing: 1px; transition: color 0.3s;
+      position: relative;
+    }
+    .nav-links a::after {
+      content: '';
+      position: absolute; bottom: -3px; left: 0;
+      width: 0; height: 1px;
+      background: var(--gold); transition: width 0.3s;
+    }
+    .nav-links a:hover { color: var(--gold); }
+    .nav-links a:hover::after { width: 100%; }
+    .nav-links a.active { color: var(--gold); }
+    .nav-links a.active::after { width: 100%; }
+
+    /* ── MOBILE ── */
+    @media (max-width: 680px) {
+      .nav-toggle { display: flex; }
+
+      .nav-links {
+        position: fixed;
+        top: 0; right: 0;
+        width: min(280px, 80vw);
+        height: 100vh;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0;
+        background: rgba(13,24,13,0.98);
+        border-left: 1px solid rgba(74,140,63,0.25);
+        padding: 80px 0 40px;
+        transform: translateX(100%);
+        transition: transform 0.4s cubic-bezier(0.4,0,0.2,1);
+        backdrop-filter: blur(8px);
+      }
+      .nav-links.open { transform: translateX(0); }
+
+      .nav-links li { width: 100%; }
+      .nav-links a {
+        display: block;
+        padding: 16px 32px;
+        font-size: 1.1rem;
+        border-bottom: 1px solid rgba(74,140,63,0.1);
+        letter-spacing: 1.5px;
+      }
+      .nav-links a::after { display: none; }
+      .nav-links a:hover { background: rgba(45,90,39,0.2); }
+      .nav-links a.active { background: rgba(45,90,39,0.25); color: var(--gold); }
+
+      /* Overlay behind drawer */
+      .nav-overlay {
+        display: none;
+        position: fixed; inset: 0; z-index: 199;
+        background: rgba(0,0,0,0.5);
+      }
+      .nav-overlay.open { display: block; }
+    }
+
+    </style>
 </head>
 <body>
 
@@ -480,11 +586,14 @@
   <div class="forest-bg" id="forestBg"></div>
 
   <!-- Navigation -->
-  <nav>
+    <nav>
     <a href="index.html" class="nav-logo">Wald<span>märchen</span></a>
-    <ul class="nav-links">
+    <button class="nav-toggle" id="navToggle" aria-label="Menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="nav-links" id="navLinks">
       <li><a href="index.html" class="active">Startseite</a></li>
-      <li><a href="translation.html">Übersetzung</a></li>
+      <li><a href="translation.html">Translation</a></li>
       <li><a href="blog.html">Blog</a></li>
       <li><a href="gallery.html">Galerie</a></li>
       <li><a href="contact.html">Kontakt</a></li>
@@ -642,4 +751,46 @@
       container.appendChild(p);
     }
 
-    /
+    // Draw SVG trees
+    const fb = document.getElementById('forestBg');
+    const W = window.innerWidth;
+    const treeConfigs = [];
+    for (let i = 0; i < 20; i++) {
+      const x = (i / 19) * W + (Math.random() - 0.5) * 80;
+      const h = Math.random() * 200 + 150;
+      const dark = Math.random() > 0.5;
+      treeConfigs.push({ x, h, dark });
+    }
+    const svgNS = 'http://www.w3.org/2000/svg';
+    const svg = document.createElementNS(svgNS, 'svg');
+    svg.setAttribute('width', '100%'); svg.setAttribute('height', '100%');
+    svg.style.cssText = 'position:absolute;bottom:0;left:0;width:100%;height:100%';
+
+    treeConfigs.sort((a,b) => a.h - b.h).forEach(({ x, h, dark }) => {
+      const tW = h * 0.25;
+      const trunkH = h * 0.3;
+      // Trunk
+      const trunk = document.createElementNS(svgNS, 'rect');
+      trunk.setAttribute('x', x - 5); trunk.setAttribute('y', 700 - trunkH);
+      trunk.setAttribute('width', 10); trunk.setAttribute('height', trunkH);
+      trunk.setAttribute('fill', dark ? '#3d2510' : '#5c3d1e');
+      svg.appendChild(trunk);
+      // Crowns
+      const colors = dark
+        ? ['#1a2e1a', '#243d20', '#2d5a27']
+        : ['#2d5a27', '#3d6b35', '#4a8c3f'];
+      [1, 0.75, 0.5].forEach((scale, i) => {
+        const poly = document.createElementNS(svgNS, 'polygon');
+        const ch = h * 0.45 * scale;
+        const cw = tW * scale;
+        const cy = 700 - trunkH - (i * h * 0.18);
+        poly.setAttribute('points', `${x},${cy - ch} ${x - cw},${cy} ${x + cw},${cy}`);
+        poly.setAttribute('fill', colors[i]);
+        poly.setAttribute('opacity', '0.92');
+        svg.appendChild(poly);
+      });
+    });
+    fb.appendChild(svg);
+  </script>
+</body>
+</html>
