@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Translation Log – Waldmärchen Manga</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=IM+Fell+English:ital@0;1&family=Nunito:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --forest-deep: #1a2e1a;
+      --forest-mid: #2d5a27;
+      --forest-light: #4a8c3f;
+      --forest-pale: #7ab648;
+      --moss: #5c7a3e;
+      --fern: #3d6b35;
+      --bark: #5c3d1e;
+      --bark-light: #8b6340;
+      --gold: #c9a84c;
+      --gold-light: #e8c96e;
+      --cream: #f5edd6;
+      --cream-dark: #e8d5b0;
+      --memo-bg: rgba(201,168,76,0.06);
+      --memo-border: rgba(201,168,76,0.2);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background-color: var(--forest-deep);
+      color: var(--cream);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background:
+        radial-gradient(ellipse at 15% 60%, rgba(45,90,39,0.12) 0%, transparent 50%),
+        radial-gradient(ellipse at 85% 35%, rgba(74,140,63,0.08) 0%, transparent 50%);
+      pointer-events: none; z-index: 0;
+    }
+
+    
+
+    /* ── PAGE HEADER ── */
+    .page-header {
+      position: relative; z-index: 10;
+      padding: 100px 32px 60px; text-align: center;
+    }
+    .page-header::after {
+      content: '';
+      position: absolute; bottom: 0; left: 10%; width: 80%; height: 1px;
+      background: linear-gradient(to right, transparent, var(--moss), var(--gold), var(--moss), transparent);
+    }
+    .page-eyebrow { font-family: 'IM Fell English', serif; font-style: italic; color: var(--forest-pale); font-size: 0.95rem; letter-spacing: 4px; margin-bottom: 12px; }
+    .page-title { font-family: 'Cinzel Decorative', serif; font-size: clamp(2rem, 5vw, 3.5rem); color: var(--gold); text-shadow: 0 4px 20px rgba(201,168,76,0.25); margin-bottom: 16px; }
+    .page-desc { font-family: 'IM Fell English', serif; color: var(--cream-dark); font-size: 1.05rem; max-width: 600px; margin: 0 auto; line-height: 1.8; opacity: 0.85; }
+
+    /* ── MAIN CONTAINER ── */
+    .container {
+      position: relative; z-index: 10;
+      max-width: 760px;
+      margin: 60px auto 100px;
+      padding: 0 24px;
+      display: flex; flex-direction: column; gap: 28px;
+    }
+
+    /* ── ENTRY CARD ── */
+    .entry-card {
+      background: linear-gradient(145deg, rgba(30,55,25,0.9), rgba(20,40,18,0.95));
+      border: 1px solid rgba(74,140,63,0.25);
+      border-radius: 4px;
+      overflow: hidden;
+      transition: border-color 0.35s, box-shadow 0.35s, transform 0.35s;
+      animation: fadeUp 0.5s ease both;
+    }
+    .entry-card:hover {
+      border-color: rgba(201,168,76,0.3);
+      box-shadow: 0 12px 32px rgba(0,0,0,0.35);
+      transform: translateY(-3px);
+    }
+
+    .entry-card:nth-child(1) { animation-delay: 0.05s; }
+    .entry-card:nth-child(2) { animation-delay: 0.10s; }
+    .entry-card:nth-child(3) { animation-delay: 0.15s; }
+    .entry-card:nth-child(4) { animation-delay: 0.20s; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── CARD HEADER BAR ── */
+    .entry-header {
+      display: flex; align-items: center; gap: 12px;
+      padding: 14px 20px;
+      background: rgba(45,90,39,0.3);
+      border-bottom: 1px solid rgba(74,140,63,0.2);
+    }
+    .entry-header h2 {
+      font-family: 'IM Fell English', serif;
+      font-size: 1.05rem;
+      color: var(--cream);
+      line-height: 1.3;
+      flex: 1;
+      letter-spacing: 0.3px;
+    }
+    .entry-tag {
+      font-family: 'Nunito', sans-serif;
+      font-size: 0.62rem; font-weight: 800;
+      letter-spacing: 2px; text-transform: uppercase;
+      padding: 3px 10px; border-radius: 2px;
+      white-space: nowrap; flex-shrink: 0;
+    }
+    .tag-mini     { background: rgba(74,140,63,0.25); color: var(--forest-pale); border: 1px solid rgba(74,140,63,0.4); }
+    .tag-trans    { background: rgba(201,168,76,0.18); color: var(--gold-light);  border: 1px solid rgba(201,168,76,0.35); }
+
+    /* ── ENTRY BODY ── */
+    .entry-body { padding: 0; }
+
+    .section {
+      padding: 16px 20px;
+      border-bottom: 1px dashed rgba(74,140,63,0.15);
+    }
+    .section:last-child { border-bottom: none; }
+
+    .section-label {
+      font-family: 'IM Fell English', serif;
+      font-size: 0.7rem;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--moss);
+      margin-bottom: 8px;
+    }
+
+    .section p {
+      font-size: 0.93rem;
+      line-height: 1.85;
+      color: var(--cream-dark);
+      opacity: 0.88;
+    }
+    .section p strong {
+      color: var(--gold-light);
+      font-weight: 800;
+    }
+
+    /* Original text section — slightly distinct */
+    .section.original {
+      background: rgba(26,46,26,0.4);
+    }
+    .section.original .section-label { color: var(--fern); }
+    .section.original p {
+      font-family: 'IM Fell English', serif;
+      font-style: italic;
+      font-size: 0.95rem;
+      color: var(--cream);
+      opacity: 0.9;
+      line-height: 1.9;
+    }
+
+    /* Translation section */
+    .section.translation .section-label { color: var(--forest-pale); }
+    .section.translation p {
+      font-size: 0.93rem;
+      line-height: 1.9;
+    }
+
+    /* Memo section — warm amber tint */
+    .section.memo {
+      background: var(--memo-bg);
+      border-top: 1px solid var(--memo-border);
+      border-bottom: none;
+    }
+    .section.memo .section-label {
+      color: var(--gold);
+      letter-spacing: 2px;
+    }
+    .section.memo p {
+      font-size: 0.86rem;
+      line-height: 1.85;
+      color: var(--cream-dark);
+      opacity: 0.78;
+    }
+    .section.memo p strong { color: var(--gold-light); }
+
+    /* Arrow divider between translation steps */
+    .arrow-divider {
+      display: flex; align-items: center; gap: 10px;
+      margin: 10px 0;
+    }
+    .arrow-divider::before, .arrow-divider::after {
+      content: '';
+      flex: 1; height: 1px;
+      background: rgba(74,140,63,0.2);
+    }
+    .arrow-divider span {
+      font-size: 0.75rem; color: var(--moss);
+      font-family: 'IM Fell English', serif;
+      font-style: italic; letter-spacing: 1px;
+    }
+
+    /* ── FOOTER ── */
+    footer { position: relative; z-index: 10; text-align: center; padding: 36px 24px 28px; border-top: 1px solid rgba(74,140,63,0.15); }
+    .footer-links { display: flex; justify-content: center; gap: 28px; flex-wrap: wrap; margin-bottom: 16px; }
+    .footer-links a { color: var(--moss); text-decoration: none; font-family: 'IM Fell English', serif; font-size: 0.9rem; transition: color 0.3s; }
+    .footer-links a:hover { color: var(--gold-light); }
+    .footer-copy { color: rgba(92,122,62,0.5); font-size: 0.78rem; letter-spacing: 1px; }
+
+    @media (max-width: 640px) {
+      nav { padding: 16px 20px; }
+      .nav-links { gap: 16px; }
+      .page-header { padding: 120px 24px 48px; }
+      .container { margin: 40px auto 80px; }
+    }
+  
+    /* ── HAMBURGER NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0;
+      width: 100%; z-index: 200;
+      padding: 0 28px;
+      height: 60px;
+      display: flex; align-items: center; justify-content: space-between;
+      background: rgba(13,24,13,0.97);
+      backdrop-filter: blur(6px);
+      border-bottom: 1px solid rgba(74,140,63,0.2);
+    }
+    .nav-logo {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: 1.1rem; color: var(--gold);
+      text-decoration: none; letter-spacing: 2px;
+      z-index: 201; flex-shrink: 0;
+    }
+    .nav-logo span { color: var(--forest-pale); }
+
+    /* Hamburger button */
+    .nav-toggle {
+      display: none;
+      flex-direction: column; justify-content: center; align-items: center;
+      gap: 5px;
+      width: 40px; height: 40px;
+      background: none; border: none; cursor: pointer;
+      z-index: 201; padding: 4px;
+    }
+    .nav-toggle span {
+      display: block;
+      width: 24px; height: 2px;
+      background: var(--cream);
+      border-radius: 2px;
+      transition: transform 0.35s, opacity 0.35s, width 0.35s;
+      transform-origin: center;
+    }
+    /* X animation */
+    .nav-toggle.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .nav-toggle.open span:nth-child(2) { opacity: 0; width: 0; }
+    .nav-toggle.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    /* Desktop links */
+    .nav-links {
+      display: flex; gap: 32px; list-style: none;
+      align-items: center;
+    }
+    .nav-links a {
+      color: var(--cream-dark); text-decoration: none;
+      font-family: 'IM Fell English', serif; font-size: 0.95rem;
+      letter-spacing: 1px; transition: color 0.3s;
+      position: relative;
+    }
+    .nav-links a::after {
+      content: '';
+      position: absolute; bottom: -3px; left: 0;
+      width: 0; height: 1px;
+      background: var(--gold); transition: width 0.3s;
+    }
+    .nav-links a:hover { color: var(--gold); }
+    .nav-links a:hover::after { width: 100%; }
+    .nav-links a.active { color: var(--gold); }
+    .nav-links a.active::after { width: 100%; }
+
+    /* ── MOBILE ── */
+    @media (max-width: 680px) {
+      .nav-toggle { display: flex; }
+
+      .nav-links {
+        position: fixed;
+        top: 0; right: 0;
+        width: min(280px, 80vw);
+        height: 100vh;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0;
+        background: rgba(13,24,13,0.98);
+        border-left: 1px solid rgba(74,140,63,0.25);
+        padding: 80px 0 40px;
+        transform: translateX(100%);
+        transition: transform 0.4s cubic-bezier(0.4,0,0.2,1);
+        backdrop-filter: blur(8px);
+      }
+      .nav-links.open { transform: translateX(0); }
+
+      .nav-links li { width: 100%; }
+      .nav-links a {
+        display: block;
+        padding: 16px 32px;
+        font-size: 1.1rem;
+        border-bottom: 1px solid rgba(74,140,63,0.1);
+        letter-spacing: 1.5px;
+      }
+      .nav-links a::after { display: none; }
+      .nav-links a:hover { background: rgba(45,90,39,0.2); }
+      .nav-links a.active { background: rgba(45,90,39,0.25); color: var(--gold); }
+
+      /* Overlay behind drawer */
+      .nav-overlay {
+        display: none;
+        position: fixed; inset: 0; z-index: 199;
+        background: rgba(0,0,0,0.5);
+      }
+      .nav-overlay.open { display: block; }
+    }
+
+    </style>
+</head>
+<body>
+
+    <nav>
+    <a href="index.html" class="nav-logo">Wald<span>märchen</span></a>
+    <button class="nav-toggle" id="navToggle" aria-label="Menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="index.html">Startseite</a></li>
+      <li><a href="translation.html" class="active">Translation</a></li>
+      <li><a href="blog.html">Blog</a></li>
+      <li><a href="gallery.html">Galerie</a></li>
+      <li><a href="contact.html">Kontakt</a></li>
+    </ul>
+  </nav>
+
+  <div class="page-header">
+    <p class="page-eyebrow">✦ Translation Log ✦</p>
+    <h1 class="page-title">Translation</h1>
+    <p class="page-desc">Notes, discoveries, and translation decisions — gathered like leaves from the forest floor.</p>
+  </div>
+
+  <div class="container">
+
+    <!-- Entry 1: ミニ知識 -->
+    <div class="entry-card">
+      <div class="entry-header">
+        <h2>アルファベットは Alpha と Beta！？</h2>
+        <span class="entry-tag tag-mini">ミニ知識</span>
+      </div>
+      <div class="entry-body">
+        <div class="section">
+          <div class="section-label">記事</div>
+          <p>ギリシャ語の最初の2文字が α（alpha）と β（beta）――それをまとめて呼んだのが <strong>alphabet</strong>。</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Entry 2: ミニ知識 -->
+    <div class="entry-card">
+      <div class="entry-header">
+        <h2>"actually" は「実は」だけじゃない</h2>
+        <span class="entry-tag tag-mini">ミニ知識</span>
+      </div>
+      <div class="entry-body">
+        <div class="section">
+          <div class="section-label">意味</div>
+          <p>期待と違う事実を軽く修正するニュアンス。</p>
+        </div>
+        <div class="section">
+          <div class="section-label">例文</div>
+          <p><strong>I actually like it.</strong>（意外とそれ好き）</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Entry 3: 翻訳 長文 -->
+    <div class="entry-card">
+      <div class="entry-header">
+        <h2>「このセリフどう訳す問題」</h2>
+        <span class="entry-tag tag-trans">翻訳</span>
+      </div>
+      <div class="entry-body">
+
+        <div class="section original">
+          <div class="section-label">原文（ムラサキキリンのチャーリーは様子が変 / デイヴィッド・D・レヴァイン）</div>
+          <p>Solipsistic delusions are frequently merely the initial manifestation of a general insensitivity to legitimacy.</p>
+        </div>
+
+        <div class="section translation">
+          <div class="section-label">翻訳</div>
+          <p>独我論的妄想は、しばしば単に正当性への全般的な鈍感さの初期症状とみなされています。</p>
+          <div class="arrow-divider"><span>修正</span></div>
+          <p>独我論的妄想は、しばしば他者の人格の正当性やときにはその存在への全般的鈍感さの単なる初期症状とみなされています。</p>
+        </div>
+
+        <div class="section memo">
+          <div class="section-label">📝 判断メモ</div>
+          <p>
+            「solipsistic」は「唯我的」よりも<strong>「独我的」</strong>が正確（自我とその所産だけが実在するという立場）。<br>
+            「唯我的」は単に自己中心的な態度を指すので意味が変わってしまう。<br>
+            「initial manifestation」＝初期症状。<br>
+            「general」の訳に迷い→「全般的な」（ある事柄の全体に及ぶさま）に落ち着いたが、まだ少し引っかかりがある。
+          </p>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Entry 4: 翻訳 -->
+    <div class="entry-card">
+      <div class="entry-header">
+        <h2>「このセリフどう訳す問題」</h2>
+        <span class="entry-tag tag-trans">翻訳</span>
+      </div>
+      <div class="entry-body">
+
+        <div class="section original">
+          <div class="section-label">原文</div>
+          <p>The protagonist kept drawing, even when no one believed in her story.</p>
+        </div>
+
+        <div class="section translation">
+          <div class="section-label">翻訳</div>
+          <p>誰も主人公のストーリーを信じていなかったのに、それでも彼女は描き続けた。</p>
+        </div>
+
+        <div class="section memo">
+          <div class="section-label">📝 判断メモ</div>
+          <p>
+            「believed in」→ 受け身ぽく「信じてもらえない」にしてニュアンスを出す。<br>
+            <strong>「even when」＝「それでも」</strong> がこの文の軸。<br>
+            「〜のに、彼女は〜した」という対比構造を日本語でも活かすのがポイント。
+          </p>
+        </div>
+
+      </div>
+    </div>
+
+  </div><!-- /.container -->
+
+  <footer>
+    <div class="footer-links">
+      <a href="index.html">Startseite</a>
+      <a href="translation.html">Translation</a>
+      <a href="blog.html">Blog</a>
+      <a href="gallery.html">Galerie</a>
+      <a href="contact.html">Kontakt</a>
+    </div>
+    <p class="footer-copy">© 2026 Waldmärchen · All translations are original work</p>
+  </footer>
+
+</body>
+</html>
