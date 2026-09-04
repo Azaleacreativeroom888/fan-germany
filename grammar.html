@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Grammatiknotizen – Waldmärchen Manga</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=IM+Fell+English:ital@0;1&family=Nunito:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --forest-deep: #1a2e1a;
+      --forest-mid:  #2d5a27;
+      --forest-light:#4a8c3f;
+      --forest-pale: #7ab648;
+      --moss:        #5c7a3e;
+      --fern:        #3d6b35;
+      --bark:        #5c3d1e;
+      --bark-light:  #8b6340;
+      --gold:        #c9a84c;
+      --gold-light:  #e8c96e;
+      --cream:       #f5edd6;
+      --cream-dark:  #e8d5b0;
+      --card-bg:     rgba(28,52,24,0.88);
+      --card-border: rgba(74,140,63,0.25);
+    }
+    *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+    body {
+      font-family:'Nunito',sans-serif;
+      background-color:var(--forest-deep);
+      color:var(--cream);
+      min-height:100vh; overflow-x:hidden;
+    }
+    body::before {
+      content:'';
+      position:fixed; inset:0;
+      background:
+        radial-gradient(ellipse at 15% 65%, rgba(45,90,39,.12) 0%, transparent 50%),
+        radial-gradient(ellipse at 85% 30%, rgba(74,140,63,.08) 0%, transparent 50%);
+      pointer-events:none; z-index:0;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position:fixed; top:0; left:0;
+      width:100%; z-index:200; height:60px; padding:0 24px;
+      display:flex; align-items:center; justify-content:space-between;
+      background:rgba(13,24,13,.97); backdrop-filter:blur(6px);
+      border-bottom:1px solid rgba(74,140,63,.2);
+    }
+    .nav-logo { font-family:'Cinzel Decorative',serif; font-size:1.1rem; color:var(--gold); text-decoration:none; letter-spacing:2px; z-index:201; flex-shrink:0; }
+    .nav-logo span { color:var(--forest-pale); }
+    .nav-toggle {
+      display:none; flex-direction:column; justify-content:center; align-items:center;
+      gap:5px; width:44px; height:44px; background:none; border:none; cursor:pointer; z-index:201; padding:4px; flex-shrink:0;
+    }
+    .nav-toggle span { display:block; width:24px; height:2px; background:var(--cream); border-radius:2px; transition:transform .35s,opacity .35s,width .35s; transform-origin:center; }
+    .nav-toggle.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+    .nav-toggle.open span:nth-child(2){opacity:0;width:0;}
+    .nav-toggle.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+    .nav-links { display:flex; gap:32px; list-style:none; align-items:center; }
+    .nav-links a { color:var(--cream-dark); text-decoration:none; font-family:'IM Fell English',serif; font-size:.95rem; letter-spacing:1px; transition:color .3s; position:relative; }
+    .nav-links a::after { content:''; position:absolute; bottom:-3px; left:0; width:0; height:1px; background:var(--gold); transition:width .3s; }
+    .nav-links a:hover { color:var(--gold); }
+    .nav-links a:hover::after,.nav-links a.active::after { width:100%; }
+    .nav-links a.active { color:var(--gold); }
+    .nav-overlay { display:none; position:fixed; inset:0; z-index:199; background:rgba(0,0,0,.5); }
+    .nav-overlay.open { display:block; }
+    @media(max-width:680px){
+      nav { padding:0 16px; }
+      .nav-toggle { display:flex; }
+      .nav-links {
+        position:fixed; top:0; right:0; width:min(280px,80vw); height:100vh;
+        flex-direction:column; align-items:flex-start; gap:0;
+        background:rgba(13,24,13,.98); border-left:1px solid rgba(74,140,63,.25);
+        padding:80px 0 40px; transform:translateX(100%);
+        transition:transform .4s cubic-bezier(.4,0,.2,1); backdrop-filter:blur(8px); z-index:200;
+      }
+      .nav-links.open { transform:translateX(0); }
+      .nav-links li { width:100%; }
+      .nav-links a { display:block; padding:16px 32px; font-size:1.1rem; letter-spacing:1.5px; border-bottom:1px solid rgba(74,140,63,.1); }
+      .nav-links a::after { display:none; }
+      .nav-links a:hover { background:rgba(45,90,39,.2); }
+      .nav-links a.active { background:rgba(45,90,39,.25); }
+    }
+
+    /* ── PAGE HEADER ── */
+    .page-header {
+      position:relative; z-index:10;
+      padding:100px 32px 56px; text-align:center; overflow:hidden;
+    }
+    .page-header::before {
+      content:'Grammatik Grammatik Grammatik Grammatik Grammatik';
+      position:absolute; bottom:-8px; left:0; right:0;
+      font-size:4rem; opacity:.03; letter-spacing:8px;
+      line-height:1; white-space:nowrap; overflow:hidden; pointer-events:none;
+      font-family:'Cinzel Decorative',serif;
+    }
+    .page-header::after {
+      content:''; position:absolute; bottom:0; left:10%; width:80%; height:1px;
+      background:linear-gradient(to right,transparent,var(--moss),var(--gold),var(--moss),transparent);
+    }
+    .page-eyebrow { font-family:'IM Fell English',serif; font-style:italic; color:var(--forest-pale); font-size:.95rem; letter-spacing:4px; margin-bottom:12px; position:relative; }
+    .page-title { font-family:'Cinzel Decorative',serif; font-size:clamp(1.8rem,5vw,3rem); color:var(--gold); text-shadow:0 4px 20px rgba(201,168,76,.25); margin-bottom:14px; position:relative; }
+    .page-desc { font-family:'IM Fell English',serif; color:var(--cream-dark); font-size:1rem; max-width:580px; margin:0 auto; line-height:1.8; opacity:.85; position:relative; }
+
+    /* ── LAYOUT ── */
+    .layout {
+      position:relative; z-index:10;
+      max-width:1060px; margin:52px auto 100px;
+      padding:0 28px;
+      display:flex; gap:32px; align-items:flex-start;
+    }
+    .main-col { flex:3; min-width:0; }
+    .toc-col  { flex:1; min-width:180px; }
+
+    /* ── TOC ── */
+    .toc-inner {
+      background:var(--card-bg); border:1px solid var(--card-border);
+      border-radius:4px; padding:20px;
+      position:sticky; top:76px;
+    }
+    .toc-title { font-family:'Cinzel Decorative',serif; font-size:.75rem; color:var(--gold); letter-spacing:2px; text-transform:uppercase; margin-bottom:14px; padding-bottom:10px; border-bottom:1px solid rgba(74,140,63,.2); }
+    .toc-inner a {
+      display:flex; align-items:center; gap:8px;
+      text-decoration:none; color:var(--cream-dark);
+      font-family:'IM Fell English',serif; font-size:.88rem;
+      padding:9px 6px; border-bottom:1px solid rgba(74,140,63,.1);
+      transition:background .2s,color .2s,padding-left .2s; border-radius:2px;
+    }
+    .toc-inner a:last-child { border-bottom:none; }
+    .toc-inner a::before { content:'›'; color:var(--forest-pale); font-size:1rem; flex-shrink:0; }
+    .toc-inner a:hover { background:rgba(45,90,39,.3); color:var(--gold-light); padding-left:12px; }
+
+    /* ── BACK LINK ── */
+    .back-link {
+      display:inline-flex; align-items:center; gap:6px;
+      color:var(--moss); text-decoration:none;
+      font-family:'IM Fell English',serif; font-size:.9rem;
+      margin-bottom:32px; padding:6px 0;
+      border-bottom:1px solid transparent; transition:color .2s,border-color .2s;
+    }
+    .back-link:hover { color:var(--gold); border-color:var(--gold); }
+
+    /* ── SECTION ── */
+    .grammar-section { margin-bottom:48px; }
+    .section-heading {
+      display:flex; align-items:center; gap:14px;
+      margin-bottom:18px; padding-bottom:12px;
+      border-bottom:2px solid rgba(201,168,76,.3);
+    }
+    .section-num {
+      background:var(--forest-mid); color:var(--gold);
+      font-family:'Cinzel Decorative',serif; font-size:.78rem;
+      width:36px; height:36px; border-radius:50%; flex-shrink:0;
+      display:flex; align-items:center; justify-content:center;
+      border:1px solid rgba(201,168,76,.35); box-shadow:0 0 12px rgba(201,168,76,.15);
+    }
+    .section-heading h2 { font-family:'IM Fell English',serif; font-size:1.35rem; color:var(--cream); line-height:1.2; }
+    .section-heading .section-sub { display:block; font-size:.8rem; color:var(--moss); font-style:italic; margin-top:3px; letter-spacing:.5px; }
+
+    /* ── RULE CARD ── */
+    .rule-card {
+      background:var(--card-bg); border:1px solid var(--card-border);
+      border-radius:4px; overflow:hidden; margin-bottom:16px;
+      transition:border-color .3s;
+    }
+    .rule-card:hover { border-color:rgba(201,168,76,.3); }
+    .rule-title {
+      background:rgba(35,65,28,.9); border-bottom:1px solid rgba(74,140,63,.25);
+      padding:11px 18px; font-family:'IM Fell English',serif; font-size:.95rem;
+      color:var(--cream-dark); display:flex; align-items:center; gap:10px;
+    }
+    .rule-title .tag {
+      background:rgba(201,168,76,.2); color:var(--gold);
+      border:1px solid rgba(201,168,76,.35);
+      font-size:.62rem; font-weight:800; letter-spacing:1.5px;
+      text-transform:uppercase; padding:2px 9px; border-radius:2px;
+      margin-left:auto; flex-shrink:0; font-family:'Nunito',sans-serif;
+    }
+    .rule-body { padding:16px 18px; font-size:.9rem; line-height:1.85; color:var(--cream-dark); }
+    .rule-body p { margin-bottom:10px; opacity:.88; }
+    .rule-body p:last-child { margin-bottom:0; }
+    .rule-body strong { color:var(--gold-light); }
+    .rule-body em { color:var(--forest-pale); font-style:italic; }
+
+    /* ── TABLE ── */
+    .conj-table {
+      width:100%; border-collapse:collapse; margin:12px 0; font-size:.85rem;
+      border:1px solid rgba(74,140,63,.2); border-radius:3px; overflow:hidden;
+    }
+    .conj-table th {
+      background:rgba(45,90,39,.6); color:var(--gold);
+      padding:7px 12px; text-align:left;
+      font-family:'IM Fell English',serif; font-size:.78rem; letter-spacing:.5px; font-weight:normal;
+      border-bottom:1px solid rgba(74,140,63,.3);
+    }
+    .conj-table td {
+      padding:7px 12px; border-bottom:1px solid rgba(74,140,63,.1);
+      vertical-align:top; color:var(--cream-dark); opacity:.88;
+    }
+    .conj-table tr:last-child td { border-bottom:none; }
+    .conj-table tr:nth-child(even) td { background:rgba(45,90,39,.12); }
+    .conj-table .de { font-style:italic; color:var(--forest-pale); font-weight:600; }
+    .conj-table .jp { color:var(--cream-dark); font-size:.82rem; opacity:.7; }
+
+    /* ── EXAMPLE ── */
+    .example {
+      background:rgba(45,90,39,.2); border-left:3px solid var(--forest-pale);
+      border-radius:0 3px 3px 0; padding:10px 14px; margin:10px 0;
+    }
+    .example .ex-main { font-family:'IM Fell English',serif; font-style:italic; color:var(--cream); font-size:.95rem; line-height:1.6; }
+    .example .ex-jp { color:var(--moss); font-size:.82rem; margin-top:4px; }
+
+    /* ── POINT ── */
+    .point {
+      background:rgba(201,168,76,.07); border:1px solid rgba(201,168,76,.2);
+      border-radius:3px; padding:10px 14px; margin:10px 0;
+      font-size:.86rem; line-height:1.8; color:var(--cream-dark); opacity:.9;
+    }
+    .point::before { content:'💡 '; }
+    .point em { color:var(--forest-pale); font-style:italic; }
+
+    /* ── FOOTER ── */
+    footer { position:relative; z-index:10; text-align:center; padding:36px 24px 28px; border-top:1px solid rgba(74,140,63,.15); }
+    .footer-links { display:flex; justify-content:center; gap:28px; flex-wrap:wrap; margin-bottom:16px; }
+    .footer-links a { color:var(--moss); text-decoration:none; font-family:'IM Fell English',serif; font-size:.9rem; transition:color .3s; }
+    .footer-links a:hover { color:var(--gold-light); }
+    .footer-copy { color:rgba(92,122,62,.5); font-size:.78rem; letter-spacing:1px; }
+
+    @media(max-width:760px){
+      .layout { flex-direction:column; gap:24px; padding:0 16px; }
+      .toc-col { width:100%; }
+      .toc-inner { position:static; }
+      .conj-table { font-size:.78rem; }
+      .conj-table th,.conj-table td { padding:6px 8px; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="index.html" class="nav-logo">Wald<span>märchen</span></a>
+    <button class="nav-toggle" id="navToggle" aria-label="Menü" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="index.html">Startseite</a></li>
+      <li><a href="translation.html" class="active">Translation</a></li>
+      <li><a href="blog.html">Blog</a></li>
+      <li><a href="gallery.html">Galerie</a></li>
+      <li><a href="contact.html">Kontakt</a></li>
+    </ul>
+  </nav>
+  <div class="nav-overlay" id="navOverlay"></div>
+
+  <div class="page-header">
+    <p class="page-eyebrow">✦ Grammatik-Referenz ✦</p>
+    <h1 class="page-title">Grammatiknotizen</h1>
+    <p class="page-desc">Deutsche Grammatik auf einen Blick — Konjugationstabellen, Beispiele und Merksätze für die Übersetzungsarbeit.</p>
+  </div>
+
+  <div class="layout">
+
+    <!-- ── LEFT: Hauptinhalt ── -->
+    <div class="main-col">
+
+      <a class="back-link" href="translation.html">← Zurück zum Translation Log</a>
+
+      <!-- §1 Präsens -->
+      <section class="grammar-section" id="praesens">
+        <div class="section-heading">
+          <div class="section-num">1</div>
+          <h2>Präsens<span class="section-sub">Gegenwart</span></h2>
+        </div>
+
+        <div class="rule-card">
+          <div class="rule-title">Konjugation der schwachen Verben <span class="tag">schwache Verben</span></div>
+          <div class="rule-body">
+            <p>Schwache Verben sind regelmäßig. Der Stamm bleibt gleich; nur die Endung ändert sich.</p>
+            <table class="conj-table">
+              <tr><th>Person</th><th class="de">spielen</th><th class="de">machen</th><th class="de">arbeiten</th></tr>
+              <tr><td>ich</td><td class="de">spiele</td><td class="de">mache</td><td class="de">arbeite</td></tr>
+              <tr><td>du</td><td class="de">spielst</td><td class="de">machst</td><td class="de">arbeitest</td></tr>
+              <tr><td>er / sie / es</td><td class="de">spielt</td><td class="de">macht</td><td class="de">arbeitet</td></tr>
+              <tr><td>wir</td><td class="de">spielen</td><td class="de">machen</td><td class="de">arbeiten</td></tr>
+              <tr><td>ihr</td><td class="de">spielt</td><td class="de">macht</td><td class="de">arbeitet</td></tr>
+              <tr><td>sie / Sie</td><td class="de">spielen</td><td class="de">machen</td><td class="de">arbeiten</td></tr>
+            </table>
+            <div class="example">
+              <div class="ex-main">Ich arbeite jeden Tag an meinem Manga.</div>
+              <div class="ex-jp">毎日マンガに取り組んでいる。</div>
+            </div>
+            <div class="point">Verben auf <em>-ten</em> oder <em>-den</em> (z. B. <em>arbeiten, reden</em>) brauchen ein <strong>-e-</strong> vor der Endung: <em>arbeit<strong>e</strong>st</em>, <em>arbeit<strong>e</strong>t</em>.</div>
+          </div>
+        </div>
+
+        <div class="rule-card">
+          <div class="rule-title">Starke Verben mit Vokalwechsel <span class="tag">starke Verben</span></div>
+          <div class="rule-body">
+            <p>Bei starken Verben wechselt der Stammvokal in der 2. und 3. Person Singular.</p>
+            <table class="conj-table">
+              <tr><th>Person</th><th class="de">fahren (a→ä)</th><th class="de">lesen (e→ie)</th><th class="de">geben (e→i)</th></tr>
+              <tr><td>ich</td><td class="de">fahre</td><td class="de">lese</td><td class="de">gebe</td></tr>
+              <tr><td>du</td><td class="de">fährst</td><td class="de">liest</td><td class="de">gibst</td></tr>
+              <tr><td>er / sie / es</td><td class="de">fährt</td><td class="de">liest</td><td class="de">gibt</td></tr>
+              <tr><td>wir</td><td class="de">fahren</td><td class="de">lesen</td><td class="de">geben</td></tr>
+              <tr><td>ihr</td><td class="de">fahrt</td><td class="de">lest</td><td class="de">gebt</td></tr>
+              <tr><td>sie / Sie</td><td class="de">fahren</td><td class="de">lesen</td><td class="de">geben</td></tr>
+            </table>
+            <div class="example">
+              <div class="ex-main">Er liest jeden Abend Manga.</div>
+              <div class="ex-jp">彼は毎晩マンガを読む。</div>
+            </div>
+            <div class="point">Wichtige Vokalwechsel: <em>a → ä</em> (fahren, schlafen), <em>e → ie</em> (lesen, sehen), <em>e → i</em> (geben, sprechen, nehmen).</div>
+          </div>
+        </div>
+
+        <div class="rule-card">
+          <div class="rule-title">Unregelmäßige Verben: sein, haben, werden <span class="tag">irreguläre Verben</span></div>
+          <div class="rule-body">
+            <table class="conj-table">
+              <tr><th>Person</th><th class="de">sein</th><th class="de">haben</th><th class="de">werden</th></tr>
+              <tr><td>ich</td><td class="de">bin</td><td class="de">habe</td><td class="de">werde</td></tr>
+              <tr><td>du</td><td class="de">bist</td><td class="de">hast</td><td class="de">wirst</td></tr>
+              <tr><td>er / sie / es</td><td class="de">ist</td><td class="de">hat</td><td class="de">wird</td></tr>
+              <tr><td>wir</td><td class="de">sind</td><td class="de">haben</td><td class="de">werden</td></tr>
+              <tr><td>ihr</td><td class="de">seid</td><td class="de">habt</td><td class="de">werdet</td></tr>
+              <tr><td>sie / Sie</td><td class="de">sind</td><td class="de">haben</td><td class="de">werden</td></tr>
+            </table>
+            <div class="point"><em>sein</em>, <em>haben</em> und <em>werden</em> sind die wichtigsten Hilfsverben im Deutschen — sie bilden Perfekt, Plusquamperfekt und Futur.</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- §2 Vergangenheit -->
+      <section class="grammar-section" id="vergangenheit">
+        <div class="section-heading">
+          <div class="section-num">2</div>
+          <h2>Präteritum<span class="section-sub">Einfache Vergangenheit</span></h2>
+        </div>
+
+        <div class="rule-card">
+          <div class="rule-title">Schwache Verben im Präteritum <span class="tag">schwache Verben</span></div>
+          <div class="rule-body">
+            <p>Schwache Verben bilden das Präteritum mit <strong>Stamm + -te-</strong> + Personalendung.</p>
+            <table class="conj-table">
+              <tr><th>Person</th><th class="de">spielen</th><th class="de">machen</th><th class="de">arbeiten</th></tr>
+              <tr><td>ich</td><td class="de">spielte</td><td class="de">machte</td><td class="de">arbeitete</td></tr>
+              <tr><td>du</td><td class="de">spieltest</td><td class="de">machtest</td><td class="de">arbeitetest</td></tr>
+              <tr><td>er / sie / es</td><td class="de">spielte</td><td class="de">machte</td><td class="de">arbeitete</td></tr>
+              <tr><td>wir</td><td class="de">spielten</td><td class="de">machten</td><td class="de">arbeiteten</td></tr>
+              <tr><td>ihr</td><td class="de">spieltet</td><td class="de">machtet</td><td class="de">arbeitetet</td></tr>
+              <tr><td>sie / Sie</td><td class="de">spielten</td><td class="de">machten</td><td class="de">arbeiteten</td></tr>
+            </table>
+            <div class="example">
+              <div class="ex-main">Sie zeichnete die ganze Nacht, auch wenn niemand an ihre Geschichte glaubte.</div>
+              <div class="ex-jp">誰も彼女の物語を信じなかったのに、彼女は一晩中描き続けた。</div>
+            </div>
+            <div class="point">Das Präteritum wird vor allem in der Schriftsprache und bei <em>sein / haben / Modalverben</em> benutzt. In der gesprochenen Sprache bevorzugt man das Perfekt.</div>
+          </div>
+        </div>
+
+        <div class="rule-card">
+          <div class="rule-title">Starke Verben im Präteritum <span class="tag">starke Verben</span></div>
+          <div class="rule-body">
+            <p>Starke Verben ändern den Stammvokal (Ablaut). Die 1. und 3. Person Singular haben <strong>keine</strong> Endung.</p>
+            <table class="conj-table">
+              <tr><th>Infinitiv</th><th>Präteritum (ich / er)</th><th>Bedeutung</th></tr>
+              <tr><td class="de">schreiben</td><td class="de">schrieb</td><td class="jp">書いた</td></tr>
+              <tr><td class="de">fahren</td><td class="de">fuhr</td><td class="jp">行った（乗り物で）</td></tr>
+              <tr><td class="de">geben</td><td class="de">gab</td><td class="jp">あげた</td></tr>
+              <tr><td class="de">lesen</td><td class="de">las</td><td class="jp">読んだ</td></tr>
+              <tr><td class="de">sehen</td><td class="de">sah</td><td class="jp">見た</td></tr>
+              <tr><td class="de">zeichnen</td><td class="de">zeichnete</td><td class="jp">描いた（規則）</td></tr>
+            </table>
+            <div class="point"><em>sein</em> → <em>war</em>、<em>haben</em> → <em>hatte</em>、<em>werden</em> → <em>wurde</em> は必ず覚えること。</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- §3 Perfekt -->
+      <section class="grammar-section" id="perfekt">
+        <div class="section-heading">
+          <div class="section-num">3</div>
+          <h2>Perfekt<span class="section-sub">Vollendete Gegenwart</span></h2>
+        </div>
+
+        <div class="rule-card">
+          <div class="rule-title">haben / sein + Partizip II <span class="tag">Perfekt</span></div>
+          <div class="rule-body">
+            <p>Das Perfekt wird im Deutschen für abgeschlossene Handlungen in der gesprochenen Sprache verwendet.</p>
+            <p><strong>haben + Partizip II</strong>（ほとんどの動詞）</p>
+            <div class="example">
+              <div class="ex-main">Ich habe den ganzen Tag Manga gezeichnet.</div>
+              <div class="ex-jp">一日中マンガを描いた。</div>
+            </div>
+            <p><strong>sein + Partizip II</strong>（移動・状態変化の動詞）</p>
+            <div class="example">
+              <div class="ex-main">Sie ist nach Yokohama gefahren.</div>
+              <div class="ex-jp">彼女は横浜へ行った。</div>
+            </div>
+            <div class="point"><em>sein</em> を使う主な動詞：<em>fahren, gehen, kommen, fliegen, werden, bleiben, sein</em>。移動・変化を表す動詞は <em>sein</em>、それ以外は <em>haben</em>。</div>
+          </div>
+        </div>
+
+        <div class="rule-card">
+          <div class="rule-title">Partizip II の作り方 <span class="tag">Partizip II</span></div>
+          <div class="rule-body">
+            <table class="conj-table">
+              <tr><th>動詞タイプ</th><th>作り方</th><th>例</th></tr>
+              <tr><td class="jp">schwach（規則）</td><td class="de">ge- + Stamm + -t</td><td><span class="de">spielen → gespielt</span></td></tr>
+              <tr><td class="jp">schwach（-ieren）</td><td class="de">Stamm + -t（ge なし）</td><td><span class="de">übersetzen → übersetzt / passieren → passiert</span></td></tr>
+              <tr><td class="jp">stark（不規則）</td><td class="de">ge- + Stamm(変) + -en</td><td><span class="de">schreiben → geschrieben</span></td></tr>
+              <tr><td class="jp">trennbar（分離動詞）</td><td class="de">Präfix + ge + Stamm + t/en</td><td><span class="de">aufmachen → aufgemacht</span></td></tr>
+            </table>
+            <div class="point">nicht trennbare Vorsilben（<em>be-, er-, ver-, ge-, zer-, ent-</em>）がつく動詞には <em>ge-</em> がつかない：<em>übersetzen → übersetzt</em>、<em>erzählen → erzählt</em>。</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- §4 Modalverben -->
+      <section class="grammar-section" id="modal">
+        <div class="section-heading">
+          <div class="section-num">4</div>
+          <h2>Modalverben<span class="section-sub">話法の助動詞</span></h2>
+        </div>
+
+        <div class="rule-card">
+          <div class="rule-title">Präsens der Modalverben <span class="tag">Modalverben</span></div>
+          <div class="rule-body">
+            <p>Modalverben drücken Möglichkeit, Erlaubnis, Pflicht oder Wunsch aus. Der Infinitiv steht am Satzende.</p>
+            <table class="conj-table">
+              <tr><th>Person</th><th class="de">können</th><th class="de">müssen</th><th class="de">dürfen</th><th class="de">wollen</th><th class="de">sollen</th><th class="de">mögen</th></tr>
+              <tr><td>ich</td><td class="de">kann</td><td class="de">muss</td><td class="de">darf</td><td class="de">will</td><td class="de">soll</td><td class="de">mag</td></tr>
+              <tr><td>du</td><td class="de">kannst</td><td class="de">musst</td><td class="de">darfst</td><td class="de">willst</td><td class="de">sollst</td><td class="de">magst</td></tr>
+              <tr><td>er/sie/es</td><td class="de">kann</td><td class="de">muss</td><td class="de">darf</td><td class="de">will</td><td class="de">soll</td><td class="de">mag</td></tr>
+              <tr><td>wir</td><td class="de">können</td><td class="de">müssen</td><td class="de">dürfen</td><td class="de">wollen</td><td class="de">sollen</td><td class="de">mögen</td></tr>
+              <tr><td>ihr</td><td class="de">könnt</td><td class="de">müsst</td><td class="de">dürft</td><td class="de">wollt</td><td class="de">sollt</td><td class="de">mögt</td></tr>
+              <tr><td>sie/Sie</td><td class="de">können</td><td class="de">müssen</td><td class="de">dürfen</td><td class="de">wollen</td><td class="de">sollen</td><td class="de">mögen</td></tr>
+            </table>
+            <div class="example">
+              <div class="ex-main">Ich will Mangaka werden. / Du musst jeden Tag üben.</div>
+              <div class="ex-jp">漫画家になりたい。／毎日練習しなければならない。</div>
+            </div>
+            <div class="point">Modalverben haben in der 1. und 3. Person Singular <strong>keine Endung</strong> — und keinen Umlaut wie im Infinitiv: <em>können → ich kann</em>.</div>
+          </div>
+        </div>
+
+        <div class="rule-card">
+          <div class="rule-title">Bedeutungen der Modalverben <span class="tag">Bedeutung</span></div>
+          <div class="rule-body">
+            <table class="conj-table">
+              <tr><th>Modalverb</th><th>Bedeutung</th><th>Beispiel</th></tr>
+              <tr><td class="de">können</td><td class="jp">〜できる（能力・可能性）</td><td><span class="de">Ich kann Manga zeichnen.</span></td></tr>
+              <tr><td class="de">müssen</td><td class="jp">〜しなければならない（義務）</td><td><span class="de">Ich muss das Kapitel fertigstellen.</span></td></tr>
+              <tr><td class="de">dürfen</td><td class="jp">〜してもよい（許可）</td><td><span class="de">Darf ich eine Pause machen?</span></td></tr>
+              <tr><td class="de">wollen</td><td class="jp">〜したい（意志）</td><td><span class="de">Ich will Mangaka werden.</span></td></tr>
+              <tr><td class="de">sollen</td><td class="jp">〜すべき（命令・他者の意志）</td><td><span class="de">Du sollst täglich üben.</span></td></tr>
+              <tr><td class="de">möchten</td><td class="jp">〜したい（丁寧な希望）</td><td><span class="de">Ich möchte bitte übersetzen.</span></td></tr>
+            </table>
+            <div class="point"><em>möchten</em>（〜したい）は <em>mögen</em> のKonjunktiv II 形。会話では <em>wollen</em> より丁寧で自然。</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- §5 Konjunktiv II -->
+      <section class="grammar-section" id="konjunktiv">
+        <div class="section-heading">
+          <div class="section-num">5</div>
+          <h2>Konjunktiv II<span class="section-sub">条件法・丁寧表現</span></h2>
+        </div>
+
+        <div class="rule-card">
+          <div class="rule-title">würde + Infinitiv（迂言的形式） <span class="tag">würde-Form</span></div>
+          <div class="rule-body">
+            <p>最も使いやすい形。<strong>würde + Infinitiv</strong> で「〜するだろう」「〜したい」を表す。</p>
+            <table class="conj-table">
+              <tr><th>Person</th><th class="de">würde + Infinitiv</th></tr>
+              <tr><td>ich</td><td class="de">würde zeichnen</td></tr>
+              <tr><td>du</td><td class="de">würdest zeichnen</td></tr>
+              <tr><td>er / sie / es</td><td class="de">würde zeichnen</td></tr>
+              <tr><td>wir</td><td class="de">würden zeichnen</td></tr>
+              <tr><td>ihr</td><td class="de">würdet zeichnen</td></tr>
+              <tr><td>sie / Sie</td><td class="de">würden zeichnen</td></tr>
+            </table>
+            <div class="example">
+              <div class="ex-main">Ich würde gerne Manga auf Deutsch übersetzen.</div>
+              <div class="ex-jp">ドイツ語でマンガを翻訳してみたい。</div>
+            </div>
+            <div class="point">丁寧な依頼：<em>Könnten Sie mir helfen?</em>（手伝っていただけますか？）<em>Würden Sie bitte …?</em>（〜していただけますか？）</div>
+          </div>
+        </div>
+
+        <div class="rule-card">
+          <div class="rule-title">Irrealis（非現実の条件文） <span class="tag">wenn … würde</span></div>
+          <div class="rule-body">
+            <p><strong>Wenn + Konjunktiv II, … würde …</strong> で「もし〜なら、〜するのに」を表す。</p>
+            <div class="example">
+              <div class="ex-main">Wenn ich mehr Zeit hätte, würde ich mehr Manga zeichnen.</div>
+              <div class="ex-jp">もっと時間があれば、もっとマンガを描くのに。</div>
+            </div>
+            <div class="example">
+              <div class="ex-main">Wenn sie Deutsch könnte, wäre die Übersetzung leichter.</div>
+              <div class="ex-jp">彼女がドイツ語を話せれば、翻訳はもっと簡単なのに。</div>
+            </div>
+            <div class="point">Konjunktiv II の主要形：<em>sein → wäre</em>、<em>haben → hätte</em>、<em>können → könnte</em>、<em>müssen → müsste</em>。</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- §6 Wortstellung -->
+      <section class="grammar-section" id="wortstellung">
+        <div class="section-heading">
+          <div class="section-num">6</div>
+          <h2>Wortstellung<span class="section-sub">語順</span></h2>
+        </div>
+
+        <div class="rule-card">
+          <div class="rule-title">Verb an zweiter Stelle (V2-Regel) <span class="tag">V2-Regel</span></div>
+          <div class="rule-body">
+            <p>Im deutschen Hauptsatz steht das konjugierte Verb immer an <strong>zweiter Stelle</strong> — egal, womit der Satz beginnt.</p>
+            <table class="conj-table">
+              <tr><th>Position 1</th><th>Verb (2.)</th><th>Rest</th></tr>
+              <tr><td class="jp">主語</td><td class="de">Ich <strong>zeichne</strong></td><td class="de">jeden Tag Manga.</td></tr>
+              <tr><td class="jp">時の副詞</td><td class="de">Heute <strong>zeichne</strong></td><td class="de">ich Manga.</td></tr>
+              <tr><td class="jp">目的語</td><td class="de">Manga <strong>zeichne</strong></td><td class="de">ich jeden Tag.</td></tr>
+            </table>
+            <div class="point">「今日私はマンガを描く」を強調したいとき、<em>Heute</em> を文頭に置いてもOK。ただし動詞は必ず2番目に来る（主語が3番目になる）。</div>
+          </div>
+        </div>
+
+        <div class="rule-card">
+          <div class="rule-title">Nebensatz: Verb am Ende <span class="tag">Nebensatz</span></div>
+          <div class="rule-body">
+            <p>副文（<em>dass, weil, ob, wenn, obwohl</em> などで始まる文）では動詞が<strong>文末</strong>に来る。</p>
+            <table class="conj-table">
+              <tr><th>接続詞</th><th>意味</th><th>例</th></tr>
+              <tr><td class="de">dass</td><td class="jp">〜ということ</td><td><span class="de">Ich weiß, dass sie zeichnet.</span></td></tr>
+              <tr><td class="de">weil</td><td class="jp">〜なので</td><td><span class="de">Ich lerne, weil ich Mangaka werden will.</span></td></tr>
+              <tr><td class="de">obwohl</td><td class="jp">〜にもかかわらず</td><td><span class="de">Sie zeichnet, obwohl sie müde ist.</span></td></tr>
+              <tr><td class="de">wenn</td><td class="jp">〜のとき／もし〜なら</td><td><span class="de">Wenn ich fertig bin, schlafe ich.</span></td></tr>
+              <tr><td class="de">ob</td><td class="jp">〜かどうか</td><td><span class="de">Ich frage, ob er Manga liest.</span></td></tr>
+            </table>
+            <div class="example">
+              <div class="ex-main">Sie zeichnete weiter, obwohl niemand an ihre Geschichte glaubte.</div>
+              <div class="ex-jp">誰も彼女の物語を信じなかったにもかかわらず、彼女は描き続けた。</div>
+            </div>
+            <div class="point">Modalverb + Infinitiv の場合、Modalverb が一番最後：<em>… weil er Manga zeichnen <strong>will</strong>.</em></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- §7 Adjektivdeklination -->
+      <section class="grammar-section" id="adjektiv">
+        <div class="section-heading">
+          <div class="section-num">7</div>
+          <h2>Adjektivdeklination<span class="section-sub">形容詞の格変化</span></h2>
+        </div>
+
+        <div class="rule-card">
+          <div class="rule-title">Nach bestimmtem Artikel (der / die / das) <span class="tag">starke Deklination</span></div>
+          <div class="rule-body">
+            <table class="conj-table">
+              <tr><th>Kasus</th><th class="de">maskulin</th><th class="de">feminin</th><th class="de">neutrum</th><th class="de">Plural</th></tr>
+              <tr><td>Nominativ</td><td class="de">der alt<strong>e</strong> Wald</td><td class="de">die alt<strong>e</strong> Geschichte</td><td class="de">das alt<strong>e</strong> Buch</td><td class="de">die alt<strong>en</strong> Bücher</td></tr>
+              <tr><td>Akkusativ</td><td class="de">den alt<strong>en</strong> Wald</td><td class="de">die alt<strong>e</strong> Geschichte</td><td class="de">das alt<strong>e</strong> Buch</td><td class="de">die alt<strong>en</strong> Bücher</td></tr>
+              <tr><td>Dativ</td><td class="de">dem alt<strong>en</strong> Wald</td><td class="de">der alt<strong>en</strong> Geschichte</td><td class="de">dem alt<strong>en</strong> Buch</td><td class="de">den alt<strong>en</strong> Büchern</td></tr>
+              <tr><td>Genitiv</td><td class="de">des alt<strong>en</strong> Waldes</td><td class="de">der alt<strong>en</strong> Geschichte</td><td class="de">des alt<strong>en</strong> Buches</td><td class="de">der alt<strong>en</strong> Bücher</td></tr>
+            </table>
+            <div class="example">
+              <div class="ex-main">Im tiefen Wald beginnt jedes Märchen.</div>
+              <div class="ex-jp">深い森の中で、すべての物語が始まる。</div>
+            </div>
+            <div class="point">定冠詞の後では形容詞の語尾はほぼ <strong>-e</strong> または <strong>-en</strong> の2種類だけ。Nominativ と Akkusativ の女性・中性が <em>-e</em>、それ以外は <em>-en</em>。</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- §8 Übersetzen: Schlüsselausdrücke -->
+      <section class="grammar-section" id="ausdruecke">
+        <div class="section-heading">
+          <div class="section-num">8</div>
+          <h2>Schlüsselausdrücke für die Übersetzung<span class="section-sub">翻訳で使える表現</span></h2>
+        </div>
+
+        <div class="rule-card">
+          <div class="rule-title">Nuancen: obwohl / trotzdem / dennoch <span class="tag">Nuance</span></div>
+          <div class="rule-body">
+            <table class="conj-table">
+              <tr><th>Ausdruck</th><th>Verwendung</th><th>Beispiel</th></tr>
+              <tr><td class="de">obwohl</td><td class="jp">副文接続詞（文中）</td><td><span class="de">obwohl niemand glaubte …</span></td></tr>
+              <tr><td class="de">trotzdem</td><td class="jp">副詞（文頭可）</td><td><span class="de">Trotzdem zeichnete sie weiter.</span></td></tr>
+              <tr><td class="de">dennoch</td><td class="jp">やや文語的な副詞</td><td><span class="de">Dennoch gab sie nicht auf.</span></td></tr>
+              <tr><td class="de">zwar … aber</td><td class="jp">「確かに〜だが」</td><td><span class="de">Zwar ist es schwer, aber ich versuche es.</span></td></tr>
+            </table>
+            <div class="point">日本語の「〜のに、それでも〜」は <em>obwohl … , trotzdem …</em> または <em>Sie zeichnete weiter, obwohl …</em> で自然に表現できる。</div>
+          </div>
+        </div>
+
+        <div class="rule-card">
+          <div class="rule-title">Emotionale Ausdrücke im Manga <span class="tag">Manga-Sprache</span></div>
+          <div class="rule-body">
+            <table class="conj-table">
+              <tr><th>日本語</th><th>ドイツ語訳</th><th>Anmerkung</th></tr>
+              <tr><td class="jp">よし！</td><td class="de">Los! / Gut!</td><td class="jp">決意・気合いの掛け声</td></tr>
+              <tr><td class="jp">〜ぞ！（強調）</td><td class="de">… auf jeden Fall! / Ich werde …!</td><td class="jp">男性的・強い意志</td></tr>
+              <tr><td class="jp">なんか（軽蔑）</td><td class="de">so jemand wie du / du überhaupt</td><td class="jp">見下しのニュアンス</td></tr>
+              <tr><td class="jp">〜じゃない（断定否定）</td><td class="de">Du bist kein … / Das ist unmöglich.</td><td class="jp">断絶・怒りの表現</td></tr>
+              <tr><td class="jp">気がする</td><td class="de">Es scheint mir, als …/ Ich habe das Gefühl, dass …</td><td class="jp">曖昧な感覚・文学的</td></tr>
+            </table>
+            <div class="example">
+              <div class="ex-main">„Du bist kein Mensch." / „Du bist ein Monster."</div>
+              <div class="ex-jp">「あんたなんか人間じゃない」— 直訳 vs. 意訳の比較。</div>
+            </div>
+            <div class="point">直訳（"Du bist kein Mensch"）より意訳（"Du bist ein Monster"）の方が感情の凝縮度が高い。マンガ翻訳では「読者に届くか」で判断する。</div>
+          </div>
+        </div>
+
+      </section>
+
+    </div><!-- /main-col -->
+
+    <!-- ── RIGHT: TOC ── -->
+    <nav class="toc-col" aria-label="Inhaltsverzeichnis">
+      <div class="toc-inner">
+        <div class="toc-title">📂 Inhalt</div>
+        <a href="#praesens">Präsens</a>
+        <a href="#vergangenheit">Präteritum</a>
+        <a href="#perfekt">Perfekt</a>
+        <a href="#modal">Modalverben</a>
+        <a href="#konjunktiv">Konjunktiv II</a>
+        <a href="#wortstellung">Wortstellung</a>
+        <a href="#adjektiv">Adjektivdeklination</a>
+        <a href="#ausdruecke">Schlüsselausdrücke</a>
+      </div>
+    </nav>
+
+  </div><!-- /layout -->
+
+  <footer>
+    <div class="footer-links">
+      <a href="index.html">Startseite</a>
+      <a href="translation.html">Translation</a>
+      <a href="blog.html">Blog</a>
+      <a href="gallery.html">Galerie</a>
+      <a href="contact.html">Kontakt</a>
+    </div>
+    <p class="footer-copy">© 2026 Waldmärchen · Alle Grammatiknotizen sind Originalwerke</p>
+  </footer>
+
+  <script>
+    (function(){
+      var toggle  = document.getElementById('navToggle');
+      var links   = document.getElementById('navLinks');
+      var overlay = document.getElementById('navOverlay');
+      if(!toggle||!links) return;
+      function closeNav(){
+        toggle.classList.remove('open'); links.classList.remove('open');
+        if(overlay) overlay.classList.remove('open');
+        document.body.style.overflow='';
+      }
+      toggle.addEventListener('click',function(){
+        if(links.classList.contains('open')){closeNav();}
+        else{toggle.classList.add('open');links.classList.add('open');if(overlay)overlay.classList.add('open');document.body.style.overflow='hidden';}
+      });
+      if(overlay) overlay.addEventListener('click',closeNav);
+      links.querySelectorAll('a').forEach(function(a){a.addEventListener('click',closeNav);});
+    })();
+
+    document.querySelectorAll('.toc-inner a').forEach(a=>{
+      a.addEventListener('click',e=>{
+        e.preventDefault();
+        const t=document.querySelector(a.getAttribute('href'));
+        if(t) t.scrollIntoView({behavior:'smooth',block:'start'});
+      });
+    });
+  </script>
+</body>
+</html>
